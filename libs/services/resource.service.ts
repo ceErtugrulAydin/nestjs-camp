@@ -17,10 +17,8 @@ export class ResourceService<
     audit.createdBy = 'Admin';
     audit.createdDate = new Date();
 
-    // Spread operatörü için model ve audit artık object tipinde.
     const createdModel = new this.mongoModel({ ...model, ...audit });
 
-    // Kaydetmeden sonra dokümanı plain objeye dönüştürüyoruz.
     const saved = await createdModel.save();
     return saved.toObject() as T;
   }
@@ -39,7 +37,6 @@ export class ResourceService<
   }
 
   async update(id: string, dto: U): Promise<T | null> {
-    // dto'nun tipi artık U extends Partial<T> olduğundan UpdateQuery ile uyumlu hale geliyor.
     const updatedDto = await this.mongoModel
       .findByIdAndUpdate(id, dto, { new: true })
       .lean<T>()
